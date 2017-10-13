@@ -15,6 +15,10 @@ input{
 	height:2em;
 }
 
+li{
+	cursor:pointer;
+}
+
 #content{
 	height: 100%;
 	display: flex;
