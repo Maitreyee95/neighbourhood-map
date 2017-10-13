@@ -1,5 +1,7 @@
+
+
 var initialLocations= [
-	{title: "Shahid Minar",location:{lat: 22.5629,lng: 88.3492},type: "monument"},
+	{title: "Shahid Minar",location:{lat: 22.5629,lng: 88.3492},type: "monument",placeid: '4c0218258ef2c9b66d9c16fc'},
 	{title: "Indian Museum",location:{lat: 22.5579,lng: 88.3511},type: "poi"},
 	{title: "Eden Gardens",location:{lat: 22.5646,lng: 88.3433},type: "stadium"},
 	{title: "Raj Bhavan",location:{lat: 22.5673,lng: 88.3473},type: "administrative"},
@@ -12,28 +14,29 @@ var markers=[];
 var initMap=function() {
 	map = new google.maps.Map(document.getElementById('map'),{
 				center: {lat: 22.5570,lng: 88.3510},
-				zoom: 15,
+				zoom: 14,
 				mapTypeControl: false
 			});
 
-	initialLocations.forEach(function(location,index){
-		// Get the position from the location array.
-		var position = location.location;
-		var title = location.title;
-	})
-
-	var highlightedIcon=new google.maps.MarkerImage("MapMarker_Marker_Outside_Azure.png",
-          new google.maps.Size(48,48));
-
-	var bounds = new google.maps.LatLngBounds();
+	setEverything();
+};
+var setEverything=function(){
 
 	markers.forEach(function(marker){
 		marker.setMap(map);
+	});
+	var highlightedIcon="MapMarker_Marker_Outside_Azure.png";
+
+	// var bounds = new google.maps.LatLngBounds();
+
+	markers.forEach(function(marker){
+		// marker.setMap(map);
 		marker.addListener('click', function() {
 			toggleBounce(this);
 			populateInfoWindow(marker, largeInfowindow);
-
 		});
+					// bounds.extend(marker.position);
+
 	})
 
 	var toggleBounce=function(marker){
@@ -64,9 +67,8 @@ var initMap=function() {
 			});
 		}
 	}
-
-};
-
+	// map.fitBounds(bounds);
+}
 var Location=function(data) {
 	this.title=ko.observable(data.title);
 	this.location=ko.observable(data.location);
@@ -80,24 +82,92 @@ var Location=function(data) {
 }
 
 var ViewModel=function () {
+	this.locationTypes=ko.observableArray(['monument','poi','stadium','administrative']);
+	this.chosenType=ko.observableArray([]);
 	this.heading=ko.observable('Welcome to the neighbourhood');
+	this.clickedFilter=ko.observable(false);
 	this.locationList=ko.observableArray([]);
 	var self=this;
-	initialLocations.forEach(function(locationItem){
-		self.locationList.push(new Location(locationItem));
+	var locItem=ko.observable();
+	initialLocations.forEach(function(location){
+		locItem=new Location(location)
+		self.locationList.push(locItem);
 	})
 
-
 	this.setMarker=function(clickedLocation){
+		hideMarkers();
+		clickedLocation.marker.setMap(map);
+	};
+
+	var hideMarkers=function(){
 		markers.forEach(function(marker){
 			marker.setMap(null);
 		})
-		clickedLocation.marker.setMap(map);
+	};
+	this.filterData=function(){
+		hideMarkers();
+		markers=[];
+		// var filteredType=self.chosenType()[0];
+		showFilteredList(self.chosenType()[0]);
 	}
+
+	self.filterclicked=function(){
+		if (self.clickedFilter()===true){
+			self.clickedFilter(false);
+		}else{
+			self.clickedFilter(true);
+		}
+
+	}
+
+	this.filterSearchData=function(){
+		hideMarkers();
+
+		markers=[];
+		var filteredType= document.getElementById('choice').value;
+		showFilteredList(filteredType);
+	}
+
+	var showFilteredList=function(filteredType){
+		var c=1;
+		var loc=ko.observable();
+		self.locationList.removeAll();
+		markers=[];
+		initialLocations.forEach(function(location,index){
+			if (location.type===filteredType){
+				loc=new Location(location);
+				c=0;
+				self.locationList.push(loc);
+			}
+		})
+		if(c===1){
+			alert("Sorry!No matching results found");
+		}
+		setEverything();
+	};
+	this.reset=function(){
+		self.locationList.removeAll();
+		hideMarkers();
+		markers=[];
+		initialLocations.forEach(function(location){
+			self.locationList.push(new Location(location));
+		})
+		setEverything();
+	};
+
 };
+
+function openNav() {
+    document.getElementById("mySidenav").style.width = "50vw";
+}
+
+/* Set the width of the side navigation to 0 */
+function closeNav() {
+    document.getElementById("mySidenav").style.width = "0";
+}
 
 var start=function(){
 	ko.applyBindings(new ViewModel());
 	initMap();
-}
+};
 
