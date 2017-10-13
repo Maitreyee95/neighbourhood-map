@@ -47,7 +47,7 @@ var setEverything=function(){
 		});
 					bounds.extend(marker.position);
 
-	})
+	});
 	//adding and removing bounce from markers
 	var toggleBounce=function(marker){
 		if(marker.getAnimation() !== null)
@@ -58,7 +58,7 @@ var setEverything=function(){
 				marker.setAnimation(google.maps.Animation.BOUNCE);
 				marker.setIcon(highlightedIcon);
 			}
-	}
+	};
 
 	var largeInfowindow = new google.maps.InfoWindow();
 
@@ -78,7 +78,7 @@ var setEverything=function(){
 		}
 	}
 	map.fitBounds(bounds);
-}
+};
 
 //creating a location functinal class using knockout
 var Location=function(data) {
@@ -94,7 +94,7 @@ var Location=function(data) {
 			animation: google.maps.Animation.DROP,
 		});
 	markers.push(this.marker);
-}
+};
 
 
 //knockout viewmodel
@@ -107,11 +107,11 @@ var ViewModel=function () {
 	var self=this;
 	var locItem=ko.observable();
 	initialLocations.forEach(function(location,index){
-		locItem=new Location(location)
+		locItem=new Location(location);
 		self.locationList.push(locItem);
 
 
-	})
+	});
 	//when a location is selected or filtered markers are shown on resulted places
 	this.setMarker=function(clickedLocation){
 		hideMarkers();
@@ -140,14 +140,14 @@ var ViewModel=function () {
 				//clearing the timeout if request comes back successful
 				clearTimeout(timeOut);
 			}
-		})
+		});
 		clickedLocation.marker.setMap(map);
 	};
 	//function for hiding the markers
 	var hideMarkers=function(){
 		markers.forEach(function(marker){
 			marker.setMap(null);
-		})
+		});
 	};
 
 	//filter data on selecting types from filter menu
@@ -155,7 +155,7 @@ var ViewModel=function () {
 		hideMarkers();
 		markers=[];
 		showFilteredList(self.chosenType()[0]);
-	}
+	};
 	//showing and hiding menu on cklicking 'Filter'
 	self.filterclicked=function(){
 		if (self.clickedFilter()===true){
@@ -164,7 +164,7 @@ var ViewModel=function () {
 			self.clickedFilter(true);
 		}
 
-	}
+	};
 	//filter data on writing in search box
 	this.filterSearchData=function(){
 
@@ -178,11 +178,11 @@ var ViewModel=function () {
 				markers=[];
 				showFilteredList(filteredType);
 			}
-		})
+		});
 		if (call===false){
 			alert("Sorry!No result found. Check search keyword and try again!");
 		}
-	}
+	};
 
 	//showing the results of filtering
 
@@ -198,7 +198,7 @@ var ViewModel=function () {
 				c=0;
 				self.locationList.push(loc);
 			}
-		})
+		});
 		if(c===1){
 			alert("Sorry!No matching results found");
 		}
@@ -212,7 +212,7 @@ var ViewModel=function () {
 		markers=[];
 		initialLocations.forEach(function(location){
 			self.locationList.push(new Location(location));
-		})
+		});
 		$('#details').empty();
 		setEverything();
 	};
