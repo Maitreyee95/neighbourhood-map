@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Neighbourhood</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+	<div id="content">
+		<div class= "side-nav">
+			<h3 data-bind="text: heading" ></h3>
+			<!-- <input type="text" id="choice"><button id="search">Search</button> -->
+			<ul data-bind="foreach: locationList">
+				<li data-bind="text: title,click: $parent.setMarker"></li>
+			</ul>
+		</div>
+		<div id="map">hi</div>
+	</div>
+	<script src="js/lib/knockout-3.2.0.js"></script>
+	<script src="js/app.js"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDcZi9y3bBFbGQt26dIx7ZpUChy1RjEqTE&v=3&callback=start"  async defer></script>
+</body>
+</html>

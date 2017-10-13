@@ -1,0 +1,25 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+.side-nav{
+	width: 30vw;
+	height: 100vh;
+	background-color: darkslategray;
+	color: white;
+}
+
+#content{
+	height: 100%;
+	display: flex;
+	flex-wrap: nowrap;
+}
+
+#map{
+	height: 100vh;
+	background-color: yellow;
+	width: 70vw;
+	flex-grow:1;
+}
+
