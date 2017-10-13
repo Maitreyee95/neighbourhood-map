@@ -8,7 +8,11 @@
 	height: 100vh;
 	background-color: darkslategray;
 	color: white;
-	font-size: 1em;
+	font-size: 1.5em;
+}
+
+input{
+	height:2em;
 }
 
 #content{
@@ -22,7 +26,8 @@ button{
 	border:none;
 	color:white;
 	padding: 0.5em;
-	font-size: 1em;
+	font-size: 0.7em;
+	font-family: Arial,sans-serif;
 }
 
 #map{
@@ -32,13 +37,13 @@ button{
 	flex-grow:1;
 }
 
-span,.closebtn{
+.openbtn,.closebtn{
 	display: none;
 }
 
 @media screen and (max-width: 1024px){
-	span{
-		display: inline-flex;
+	.openbtn{
+		display: block;
 	}
 	.closebtn{
 		display: inline-block;
