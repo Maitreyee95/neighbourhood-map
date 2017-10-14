@@ -11,14 +11,11 @@ var initialLocations= [
 var map;
 var markers=[];
 
-
-
 //setting foursquare URL
 var fsUrl = "https://api.foursquare.com/v2/venues/",
     fsClient_id = "client_id=VZSHPGBA1OXN4OX1BYMZS33X5OH4YANXYLBZL3HNAUNACJKF",
     fsClient_secret = "&client_secret=RSAKWHS1ZHT0BRQ4P5FVIFQ4CM12PCIBJN3ORLPIB3JKL01H",
     fsVersion = "&v=20171013";
-
 
 //initialising map
 var initMap=function() {
@@ -27,80 +24,21 @@ var initMap=function() {
 				zoom: 14,
 				mapTypeControl: false
 			});
+	var bounds = new google.maps.LatLngBounds();
 	markers.forEach(function(marker){
 		marker.setMap(map);
-	});
-	setEverything();
-};
-
-//places the markers on page
-var setEverything=function(){
-
-
-	var highlightedIcon="MapMarker_Marker_Outside_Azure.png";
-
-	var bounds = new google.maps.LatLngBounds();
-	//markers bounce on clicking and shows the infowindow
-	markers.forEach(function(marker,index){
-		// marker.setMap(map);
-		marker.addListener('click', function() {
-			toggleBounce(this);
-			populateInfoWindow(marker,index, largeInfowindow);
-			});
 		bounds.extend(marker.position);
-
 	});
-
-	//adding and removing bounce from markers
-	var toggleBounce=function(marker){
-
-		//resetting animation and icon of any previously clicked marker
-		markers.forEach(function(marker){
-			marker.setAnimation(null);
-			marker.setIcon(null);
-		});
-		if(marker.getAnimation() !== null)
-			{
-				marker.setAnimation(null);
-				marker.setIcon(null);
-			}else{
-				marker.setAnimation(google.maps.Animation.BOUNCE);
-				marker.setIcon(highlightedIcon);
-			}
-	};
-
-	var largeInfowindow = new google.maps.InfoWindow();
-
-	//making infowindow for each marker
-	function populateInfoWindow(marker,index, infowindow) {
-		// Check to make sure the infowindow is not already opened on this marker.
-		if (infowindow.marker != marker) {
-			infowindow.marker = marker;
-			infowindow.setContent('<div>' + marker.title + '</div>');
-			infowindow.open(map, marker);
-			infowindow.addListener('mouseover',function() {
-				infowindow.marker = null;
-
-			});
-			// Make sure the marker property is cleared if the infowindow is closed.
-			infowindow.addListener('closeclick', function() {
-				infowindow.marker = null;
-				marker.setAnimation(null);
-				marker.setIcon(null);
-			});
-		}
-	}
 	map.fitBounds(bounds);
 };
 
-//creating a location functinal class using knockout
+//creating a location functional class using knockout
 var Location=function(data) {
 	this.title=ko.observable(data.title);
 	this.location=ko.observable(data.location);
 	this.type=ko.observable(data.type);
 	this.id=ko.observable(data.id);
 	this.index=ko.observable(data.index);
-	// this.details=ko.observableArray(data.details);
 	this.marker = new google.maps.Marker({
 			position: this.location(),
 			title: this.title(),
@@ -117,7 +55,7 @@ var ViewModel=function () {
 	this.clickedFilter=ko.observable(false);
 	this.locationList=ko.observableArray([]);
 	this.name=ko.observable();
-	this.address=ko.observableArray([]);
+	this.address=ko.observable([]);
 	this.rating=ko.observable();
 	this.likes=ko.observable();
 	var self=this;
@@ -131,65 +69,98 @@ var ViewModel=function () {
 	markers.forEach(function(marker,index){
 		marker.addListener('click', function() {
 			getFSDataOnMarkerClick(index);
+			toggleBounce(this);
+			populateInfoWindow(marker,index, largeInfowindow);
 		});
 	});
 
+	//when a marker is clicked,its infowindow is displayed and foursquare data
+	//of the place is shown
 	function getFSDataOnMarkerClick(index){
 		var p= initialLocations[index].id;
 		var locType= initialLocations[index].type;
+
+		populateInfoWindow(markers[index],index, largeInfowindow);
 		getFSData(p,locType);
 	}
-	//when a location is selected, foursquare data is displayed
+
+	//when a location is selected,its foursquare data is shown,
+	//the corresponding marker is animated and infowindow is displayed
 	this.getFSDataOnLocationClick=function(clickedLocation){
 		var p=clickedLocation.id();
 		var i=clickedLocation.index();
 		markers.forEach(function(marker){
 			marker.setAnimation(null);
 			marker.setIcon(null);
-			// locationClicked='true';
 		});
 		markers[i].setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ markers[i].setAnimation(null); }, 750);
+		populateInfoWindow(markers[i],i, largeInfowindow);
 		console.log(i);
 		var locType=clickedLocation.type();
 		getFSData(p,locType);
 	};
 
+	//function for getting foursquare data
 	function getFSData(p,locType){
 		var venueID=p+"/?";
 		var URL= fsUrl + venueID + fsClient_id+ fsClient_secret+fsVersion;
-
 		//setting a timeout function in case foursquare API doesn't load
 		var timeOut=setTimeout(function(){
 			$("#details").text("Failed to get resources");
 		},8000);
-
+		var a,b,c,d;
 		//requesting foursquare  API
 		$.ajax(URL,{
 			dataType: "jsonp",
 			success: function(data){
-
-				var a=data.response.venue.likes.summary;
-				var b = data.response.venue.rating;
-				var c= data.response.venue.name;
-				var d=data.response.venue.location.formattedAddress;
-				//showing details of clicked location
-				console.log(a,b,c,d);
-				self.name(c);
-				self.address(d);
-				self.rating(b);
-				self.likes(a);
-				console.log(self.name());
+				a=data.response.venue.name;
+				b=data.response.venue.location.formattedAddress;
+				c=data.response.venue.likes.summary;
+				d=data.response.venue.rating;
+				self.name('Venue: '+ a);
+				self.address('Address: '+b);
+				self.likes('Likes: '+ c);
+				self.rating('Rating: '+d);
 				//clearing the timeout if request comes back successful
 				clearTimeout(timeOut);
 			}
 		});
 	}
 
-	//filter data on selecting types from filter menu
-	this.filterData=function(){
-		showFilteredList(self.chosenType()[0]);
+	//adding and removing bounce from markers
+	var toggleBounce=function(marker){
+		//resetting animation and icon of any previously clicked marker
+		markers.forEach(function(marker){
+			marker.setAnimation(null);
+		});
+		if(marker.getAnimation() !== null)
+			{
+				marker.setAnimation(null);
+			}else{
+				marker.setAnimation(google.maps.Animation.BOUNCE);
+			}
 	};
+
+	var largeInfowindow = new google.maps.InfoWindow();
+
+	//making infowindow for each marker
+	function populateInfoWindow(marker,index, infowindow) {
+		// Check to make sure the infowindow is not already opened on this marker.
+		if (infowindow.marker != marker) {
+			infowindow.marker = marker;
+			infowindow.setContent('<div>' + marker.title + '</div>');
+
+			infowindow.open(map, marker);
+			// Make sure the marker property is cleared if the infowindow is closed.
+			infowindow.addListener('closeclick', function() {
+				infowindow.marker = null;
+				marker.setAnimation(null);
+				marker.setIcon(null);
+			});
+		}
+	}
+
 	//showing and hiding menu on clicking 'Filter'
 	self.filterclicked=function(){
 		if (self.clickedFilter()===true){
@@ -199,6 +170,12 @@ var ViewModel=function () {
 		}
 
 	};
+
+	//filter data on selecting types from filter menu
+	this.filterData=function(){
+		showFilteredList(self.chosenType()[0]);
+	};
+
 	//filter data on writing in search box
 	this.filterSearchData=function(){
 		var filteredType= document.getElementById('choice').value;
@@ -206,7 +183,6 @@ var ViewModel=function () {
 	};
 
 	//showing the results of filtering
-
 	var showFilteredList=function(filteredType){
 		var c=1;
 		$("#details").empty();
@@ -224,7 +200,8 @@ var ViewModel=function () {
 			}
 		});
 		if(c===1){
-			alert("Sorry!No matching results found");
+			alert("Sorry!No matching results found.\nNote: Keywords are case-sensitive.Make sure all characters are in lower-case.");
+			self.reset();
 		}
 	};
 
@@ -238,6 +215,7 @@ var ViewModel=function () {
 		document.getElementById('choice').value=null;
 		self.chosenType([]);
 		$('#details').empty();
+		largeInfowindow.close();
 	};
 };
 
@@ -253,12 +231,22 @@ function closeNav() {
 
 
 //function for hiding the markers
-	var hideMarkers=function(){
-		markers.forEach(function(marker){
-			marker.setMap(null);
-		});
-	};
+var hideMarkers=function(){
+	markers.forEach(function(marker){
+		marker.setMap(null);
+	});
+};
 
+//alerting users when google maps could not be loaded
+var loadError= function(){
+	alert('Google Maps could not be loaded');
+}
+
+$("#choice").keyup(function(event){
+    if(event.keyCode == 13){
+        $("#filter").click();
+    }
+});
 
 //start() runs when map loads
 var start=function(){
