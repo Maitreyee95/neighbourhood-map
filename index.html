@@ -13,24 +13,30 @@
 	<div id="content">
 		<button class="openbtn" onclick="openNav()">open</button>
 		<div id="mySidenav" class= "sidenav">
-
-			<button class="closebtn" onclick="closeNav()">Close</button>
-			<h3 data-bind="text: heading" ></h3>
-
-			<input type="search" id="choice" placeholder ="Search places. Eg: Eatery"><button id="filter" data-bind="click: filterSearchData">Search</button><button data-bind="click:reset">See All</button>
-			<div>
-			<button data-bind="click: filterclicked">Filter</button>
-			<select size=3 multiple= "true" data-bind="options: locationTypes,selectedOptions: chosenType,click:filterData,visible: clickedFilter">Filter</select>
-			<ul data-bind="foreach: locationList">
-				<li data-bind="text: title,click: $parent.getFSDataOnLocationClick"></li>
-			</ul>
-			<hr>
-			<div  data-bind:"text: $parent.name"></div>
+			<div  data-bind:"text: name"></div>
 			<div  data-bind:"text: address"></div>
 			<div  data-bind:"text: rating"></div>
 			<div data-bind:"text: likes"></div>
 			<div  data-bind:"text: type"></div>
+
+			<button class="closebtn" onclick="closeNav()">Close</button>
+			<h3 data-bind="text: heading" ></h3>
+
+			<input type="search" id="choice" placeholder ="Search places. Eg: Eatery">
+			<button id="filter" data-bind="click: filterSearchData">Search</button>
+			<button data-bind="click:reset">See All</button>
+			<div>
+				<button data-bind="click: filterclicked">Filter</button>
+
+				<select size=3 multiple= "true" data-bind="options: locationTypes,selectedOptions: chosenType,click:filterData,visible: clickedFilter"></select>
 			</div>
+			<ul data-bind="foreach: locationList">
+				<li data-bind="text: title,click: $parent.getFSDataOnLocationClick"></li>
+			</ul>
+
+			<hr>
+
+
 		</div>
 
 		<!-- <button class="showNav">click</button> -->

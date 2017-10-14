@@ -78,6 +78,10 @@ var setEverything=function(){
 			infowindow.marker = marker;
 			infowindow.setContent('<div>' + marker.title + '</div>');
 			infowindow.open(map, marker);
+			infowindow.addListener('mouseover',function() {
+				infowindow.marker = null;
+
+			});
 			// Make sure the marker property is cleared if the infowindow is closed.
 			infowindow.addListener('closeclick', function() {
 				infowindow.marker = null;
@@ -165,10 +169,10 @@ var ViewModel=function () {
 			dataType: "jsonp",
 			success: function(data){
 
-				a=data.response.venue.likes.summary;
-				b = data.response.venue.rating;
-				c= data.response.venue.name;
-				d=data.response.venue.location.formattedAddress;
+				var a=data.response.venue.likes.summary;
+				var b = data.response.venue.rating;
+				var c= data.response.venue.name;
+				var d=data.response.venue.location.formattedAddress;
 				//showing details of clicked location
 				console.log(a,b,c,d);
 				self.name(c);
