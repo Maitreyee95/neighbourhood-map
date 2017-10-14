@@ -22,10 +22,14 @@
 			<button data-bind="click: filterclicked">Filter</button>
 			<select size=3 multiple= "true" data-bind="options: locationTypes,selectedOptions: chosenType,click:filterData,visible: clickedFilter">Filter</select>
 			<ul data-bind="foreach: locationList">
-				<li data-bind="text: title,click: $parent.setMarker"></li>
+				<li data-bind="text: title,click: $parent.getFSDataOnLocationClick"></li>
 			</ul>
 			<hr>
-			<div id="details" data-bind:"text: details"></div>
+			<div  data-bind:"text: $parent.name"></div>
+			<div  data-bind:"text: address"></div>
+			<div  data-bind:"text: rating"></div>
+			<div data-bind:"text: likes"></div>
+			<div  data-bind:"text: type"></div>
 			</div>
 		</div>
 
