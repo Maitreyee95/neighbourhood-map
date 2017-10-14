@@ -58,7 +58,7 @@ var setEverything=function(){
 		markers.forEach(function(marker){
 			marker.setAnimation(null);
 			marker.setIcon(null);
-		})
+		});
 		if(marker.getAnimation() !== null)
 			{
 				marker.setAnimation(null);
@@ -131,7 +131,7 @@ var ViewModel=function () {
 	markers.forEach(function(marker,index){
 		marker.addListener('click', function() {
 			getFSDataOnMarkerClick(index);
-		})
+		});
 	});
 
 	function getFSDataOnMarkerClick(index){
@@ -147,7 +147,7 @@ var ViewModel=function () {
 			marker.setAnimation(null);
 			marker.setIcon(null);
 			// locationClicked='true';
-		})
+		});
 		markers[i].setAnimation(google.maps.Animation.BOUNCE);
 		setTimeout(function(){ markers[i].setAnimation(null); }, 750);
 		console.log(i);
