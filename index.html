@@ -13,9 +13,6 @@
 	<div id="content">
 		<button class="openbtn" onclick="openNav()">open</button>
 		<div id="mySidenav" class= "sidenav">
-			<!-- <div data-bind="if: x"> -->
-
-			<!-- </div> -->
 			<button class="closebtn" onclick="closeNav()">Close</button>
 			<h3 data-bind="text: heading" ></h3>
 
@@ -32,17 +29,13 @@
 			</ul>
 
 			<hr>
-				<!-- <button data-bind="visible:x,text:details"></button> -->
 				<div id="name" data-bind="text: name"></div>
-				<!-- <li  data-bind="text: address"></div> -->
 				<div  data-bind="text: rating"></div>
 				<div data-bind="text: likes"></div>
 				<div  data-bind="text: address"></div>
-
 		</div>
 
-		<!-- <button class="showNav">click</button> -->
-		<div id="map">hi</div>
+		<div id="map"></div>
 	</div>
 	<script src="js/lib/knockout-3.2.0.js"></script>
 	<script async defer src="js/app.js"></script>

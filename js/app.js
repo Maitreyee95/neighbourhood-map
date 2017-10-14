@@ -240,7 +240,7 @@ var hideMarkers=function(){
 //alerting users when google maps could not be loaded
 var loadError= function(){
 	alert('Google Maps could not be loaded');
-}
+};
 
 $("#choice").keyup(function(event){
     if(event.keyCode == 13){
