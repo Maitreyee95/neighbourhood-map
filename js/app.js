@@ -117,6 +117,10 @@ var ViewModel=function () {
 				b=data.response.venue.location.formattedAddress;
 				c=data.response.venue.likes.summary;
 				d=data.response.venue.rating;
+
+				if(d===undefined){
+					d="Sorry!This place has no rating as of yet";
+				}
 				self.name('Venue: '+ a);
 				self.address('Address: '+b);
 				self.likes('Likes: '+ c);
