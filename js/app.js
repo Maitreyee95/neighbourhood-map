@@ -59,7 +59,8 @@ var ViewModel=function () {
 	this.rating=ko.observable();
 	this.likes=ko.observable();
 	var self=this;
-	var locItem=ko.observable();
+	var locItem;
+	var a,b,c,d;
 	initialLocations.forEach(function(location,index){
 		locItem=new Location(location);
 		self.locationList.push(locItem);
@@ -94,9 +95,8 @@ var ViewModel=function () {
 			marker.setIcon(null);
 		});
 		markers[i].setAnimation(google.maps.Animation.BOUNCE);
-		setTimeout(function(){ markers[i].setAnimation(null); }, 750);
+		toggleBounce(markers[i]);
 		populateInfoWindow(markers[i],i, largeInfowindow);
-		console.log(i);
 		var locType=clickedLocation.type();
 		getFSData(p,locType);
 	};
@@ -107,9 +107,8 @@ var ViewModel=function () {
 		var URL= fsUrl + venueID + fsClient_id+ fsClient_secret+fsVersion;
 		//setting a timeout function in case foursquare API doesn't load
 		var timeOut=setTimeout(function(){
-			$("#details").text("Failed to get resources");
+			alert("Failed to get resources");
 		},8000);
-		var a,b,c,d;
 		//requesting foursquare  API
 		$.ajax(URL,{
 			dataType: "jsonp",
@@ -139,6 +138,7 @@ var ViewModel=function () {
 				marker.setAnimation(null);
 			}else{
 				marker.setAnimation(google.maps.Animation.BOUNCE);
+				setTimeout(function(){ marker.setAnimation(null); }, 1400);
 			}
 	};
 
@@ -176,19 +176,15 @@ var ViewModel=function () {
 		showFilteredList(self.chosenType()[0]);
 	};
 
-	//filter data on writing in search box
-	this.filterSearchData=function(){
-		var filteredType= document.getElementById('choice').value;
-		showFilteredList(filteredType);
-	};
-
 	//showing the results of filtering
 	var showFilteredList=function(filteredType){
 		var c=1;
-		$("#details").empty();
-		var loc=ko.observable();
+		var loc;
 		self.locationList.removeAll();
+		largeInfowindow.setContent(null);
+		largeInfowindow.close();
 		hideMarkers();
+		removeDetails();
 		initialLocations.forEach(function(location,index){
 			if (location.type===filteredType){
 				loc=new Location(location);
@@ -212,11 +208,18 @@ var ViewModel=function () {
 			self.locationList.push(new Location(location));
 			markers[index].setMap(map);
 		});
-		document.getElementById('choice').value=null;
 		self.chosenType([]);
-		$('#details').empty();
+		removeDetails();
+		largeInfowindow.setContent(null);
 		largeInfowindow.close();
 	};
+
+	var removeDetails=function(){
+		self.name("");
+		self.address("");
+		self.likes("");
+		self.rating("");
+	}
 };
 
 // function for opening the navigation bar on small screen
@@ -242,11 +245,11 @@ var loadError= function(){
 	alert('Google Maps could not be loaded');
 };
 
-$("#choice").keyup(function(event){
-    if(event.keyCode == 13){
-        $("#filter").click();
-    }
-});
+// $("#choice").keyup(function(event){
+//     if(event.keyCode == 13){
+//         $("#filter").click();
+//     }
+// });
 
 //start() runs when map loads
 var start=function(){

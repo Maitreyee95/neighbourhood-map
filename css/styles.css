@@ -8,31 +8,42 @@
 .sidenav{
 	width: 40vw;
 	height: 100vh;
-	background-color: darkslategray;
+	background-color: black;
 	color: white;
-	font-size: 1.5em;
+	font-size: 1.2em;
+	/*overflow-y: scroll;*/
 }
 
-input{
-	height:2em;
+h4{
+	padding: 1vh 0;
+	text-align: center;
 }
 
 li{
 	cursor:pointer;
+	padding:1vh;
+	color: white;
+}
+
+select{
+	font-size: 0.9em;
+	width:10em;
 }
 
 #content{
-	height: 100%;
 	display: flex;
 	flex-wrap: nowrap;
 }
 
 button{
-	background-color: black;
+	background-color: darkcyan;
 	border:none;
 	color:white;
 	padding: 0.5em;
 	font-size: 0.7em;
+	margin-bottom: 1vh;
+	margin-left: 1vh;
+	margin-top: 1vh;
 	font-family: Arial,sans-serif;
 }
 
@@ -47,13 +58,19 @@ button{
 	display: none;
 }
 
+.openbtn{
+	margin:0;
+}
+
+li:hover {
+	background-color: darkgray;
+}
 @media screen and (max-width: 1024px){
 	.openbtn{
 		display: block;
 	}
 	.closebtn{
 		display: inline-block;
-		font-size: 1em;
 	}
 	.sidenav {
     height: 100%; /* 100% Full-height */
@@ -63,17 +80,10 @@ button{
     top: 0;
     left: 0;
     color: white;
-    background-color: darkslategray;
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 60px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
 }
-
-/*select{
-	background-color: black;
-	color: white;
-	/*overflow-y: scroll;*/
-
 
 .sidenav .closebtn {
     position: absolute;
