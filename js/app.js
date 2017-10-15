@@ -249,12 +249,6 @@ var loadError= function(){
 	alert('Google Maps could not be loaded');
 };
 
-// $("#choice").keyup(function(event){
-//     if(event.keyCode == 13){
-//         $("#filter").click();
-//     }
-// });
-
 //start() runs when map loads
 var start=function(){
 	ko.applyBindings(new ViewModel());
