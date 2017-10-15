@@ -219,7 +219,7 @@ var ViewModel=function () {
 		self.address("");
 		self.likes("");
 		self.rating("");
-	}
+	};
 };
 
 // function for opening the navigation bar on small screen
